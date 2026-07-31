@@ -22,13 +22,30 @@ export default function Header() {
     if (!menuOpen) return;
 
     const previousOverflow = document.body.style.overflow;
+    const toggleButton = toggleRef.current;
     document.body.style.overflow = "hidden";
-    firstLinkRef.current?.focus();
+    const focusFrame = requestAnimationFrame(() => firstLinkRef.current?.focus());
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setMenuOpen(false);
-        toggleRef.current?.focus();
+        return;
+      }
+      if (event.key !== "Tab" || !menuRef.current) return;
+
+      const focusable = Array.from(menuRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ));
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
     const handlePointerDown = (event: PointerEvent) => {
@@ -41,9 +58,11 @@ export default function Header() {
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("pointerdown", handlePointerDown);
     return () => {
+      cancelAnimationFrame(focusFrame);
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("pointerdown", handlePointerDown);
+      toggleButton?.focus();
     };
   }, [menuOpen]);
 
