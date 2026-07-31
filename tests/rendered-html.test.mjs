@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { getPartnerDestination, partnerCodeError } from "../app/partner/partner-code.ts";
 
 const publicRoutes = [
   "/",
@@ -53,4 +54,20 @@ test("all public routes render successfully", async (t) => {
       assert.match(await response.text(), /Thoddoo Sun Sky Inn/);
     });
   }
+});
+
+test("valid partner code redirects to the private offer", () => {
+  assert.equal(getPartnerDestination("BEZCESTOVKY"), "/bez-cestovky");
+});
+
+test("partner code matching ignores case and surrounding spaces", () => {
+  assert.equal(getPartnerDestination("  bezcestovky  "), "/bez-cestovky");
+});
+
+test("invalid partner code returns the accessible error", () => {
+  assert.equal(getPartnerDestination("not-a-valid-code"), null);
+  assert.equal(
+    partnerCodeError,
+    "This partner code is not valid. Please check the code or contact Sun Sky Inn.",
+  );
 });
