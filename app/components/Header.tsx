@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const desktopLinks = [
@@ -13,6 +14,8 @@ const mobileLinks = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+  const hidePublicBooking = pathname === "/bez-cestovky";
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -72,7 +75,7 @@ export default function Header() {
     <div className="shell nav-wrap">
       <Link href="/" className="brand" onClick={closeMenu}><img src="/images/logo.png" alt="Thoddoo Sun Sky Inn" width={135} height={135} loading="eager" decoding="async" /></Link>
       <nav className="desktop-nav" aria-label="Primary navigation">{desktopLinks.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
-      <a className="btn btn-gold nav-book desktop-book" href="https://book.thoddoosunskyinn.com">Book direct</a>
+      {!hidePublicBooking && <a className="btn btn-gold nav-book desktop-book" href="https://book.thoddoosunskyinn.com">Book direct</a>}
       <button
         ref={toggleRef}
         type="button"
@@ -89,7 +92,7 @@ export default function Header() {
       <nav ref={menuRef} id="mobile-navigation" className="mobile-menu" aria-label="Mobile navigation">
         <span className="eyebrow light">Explore Sun Sky Inn</span>
         {mobileLinks.map(([label, href], index) => <Link ref={index === 0 ? firstLinkRef : undefined} key={href} href={href} onClick={closeMenu}>{label}</Link>)}
-        <a className="btn btn-gold mobile-book" href="https://book.thoddoosunskyinn.com" onClick={closeMenu}>Book Direct</a>
+        {!hidePublicBooking && <a className="btn btn-gold mobile-book" href="https://book.thoddoosunskyinn.com" onClick={closeMenu}>Book Direct</a>}
       </nav>
     </div>
   </header>;

@@ -71,3 +71,37 @@ test("invalid partner code returns the accessible error", () => {
     "This partner code is not valid. Please check the code or contact Sun Sky Inn.",
   );
 });
+
+test("private Slovak partner page renders the complete fixed offer", async () => {
+  const response = await render("/bez-cestovky");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  assert.match(html, /BEZCESTOVKY/);
+  for (const price of ["70 USD", "90 USD", "110 USD", "18 USD", "23 USD", "28 USD"]) {
+    assert.match(html, new RegExp(price));
+  }
+  assert.match(html, /\+960 991 0136/);
+  assert.match(html, /reservation@thoddoosunskyinn\.com/);
+  assert.match(html, /Táto suma je orientačná/);
+  assert.match(html, /rýchloloďou/);
+  assert.match(html, /Ako sa dostať na Thoddoo/);
+  assert.match(html, /Pláže na Thoddoo/);
+  assert.match(html, /Prečo si vybrať Thoddoo/);
+  assert.match(html, /8 nocí a viac/);
+  assert.match(html, /30 až 45 minút šnorchlovania/);
+  assert.match(html, /<meta name="robots" content="noindex, nofollow"\/>/i);
+
+  assert.doesNotMatch(html, /https:\/\/be\.aiosell\.com\/book\/22ffd2f355/);
+  assert.doesNotMatch(html, /https:\/\/book\.thoddoosunskyinn\.com/);
+  assert.doesNotMatch(html, /\+960 914 2538/);
+  assert.doesNotMatch(html, /ahmedthoddoo@gmail\.com/);
+});
+
+test("private partner page remains excluded from the sitemap", async () => {
+  const response = await render("/sitemap.xml");
+  assert.equal(response.status, 200);
+  const sitemap = await response.text();
+  assert.doesNotMatch(sitemap, /bez-cestovky/);
+  assert.match(sitemap, /https:\/\/thoddoosunskyinn\.com\/partner/);
+});
