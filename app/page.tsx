@@ -1,14 +1,16 @@
 const whatsapp = "https://wa.me/9609910136?text=Hello%20Thoddoo%20Sun%20Sky%20Inn%2C%20I%27d%20like%20to%20book%20a%20stay.";
 
 const images = {
-  hero: "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=2200&q=90",
-  island: "https://images.unsplash.com/photo-1540202404-a2f29016b523?auto=format&fit=crop&w=1600&q=85",
-  roomOne: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1400&q=85",
-  roomTwo: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1400&q=85",
-  snorkel: "https://images.unsplash.com/photo-1530789253388-582c481c54b0?auto=format&fit=crop&w=1400&q=85",
-  sandbank: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=85",
-  dinner: "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1400&q=85",
-  palm: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1400&q=85",
+  hero: "/images/hero.webp",
+  island: "/images/island.webp",
+  roomOne: "/images/room-family.webp",
+  roomTwo: "/images/room-deluxe.webp",
+  snorkel: "/images/island.webp",
+  sandbank: "/images/sandbank.webp",
+  dinner: "/images/dining.webp",
+  palm: "/images/garden.webp",
+  exterior: "/images/exterior.webp",
+  reception: "/images/reception.webp",
 };
 
 export default function Home() {
@@ -80,7 +82,7 @@ export default function Home() {
 
       <section className="gallery shell" id="gallery">
         <div className="gallery-title"><p className="eyebrow">POSTCARDS FROM PARADISE</p><h2>The island,<br/><em>through our eyes.</em></h2></div>
-        <img className="g-one" src={images.palm} alt="Palm trees in the tropical sun"/><img className="g-two" src={images.sandbank} alt="Clear blue water on a Maldives beach"/><img className="g-three" src={images.island} alt="Maldives island coastline"/>
+        <img className="g-one" src={images.exterior} alt="Entrance of Thoddoo Sun Sky Inn"/><img className="g-two" src={images.reception} alt="Open-air reception at Thoddoo Sun Sky Inn"/><img className="g-three" src={images.island} alt="Thoddoo island coastline"/>
       </section>
 
       <section className="booking" style={{backgroundImage:`linear-gradient(90deg,rgba(4,36,34,.72),rgba(4,36,34,.2)),url(${images.hero})`}}>
