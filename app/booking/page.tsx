@@ -1,23 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import JsonLd from "../components/JsonLd";
 import PageHero from "../components/PageHero";
 import { officialBookingEngineUrl } from "../lib/booking";
+import { buildBreadcrumbList, createPageMetadata } from "../lib/seo";
 
-export const metadata: Metadata = {
-  title: "Secure Booking",
-  description: "Continue to the official Sun Sky Inn booking engine.",
-  alternates: {
-    canonical: "/booking",
-  },
+export const metadata: Metadata = createPageMetadata({
+  title: "Secure Booking Transition",
+  description: "Continue to the official Thoddoo Sun Sky Inn booking engine.",
+  path: "/booking",
   robots: {
     index: false,
     follow: false,
   },
-};
+});
+
+const breadcrumbData = buildBreadcrumbList([{ name: "Booking", path: "/booking" }]);
 
 export default function Booking() {
   return (
     <>
+      <JsonLd data={breadcrumbData} />
       <script
         dangerouslySetInnerHTML={{
           __html: `window.setTimeout(function(){window.location.replace(${JSON.stringify(officialBookingEngineUrl)});},2000);`,

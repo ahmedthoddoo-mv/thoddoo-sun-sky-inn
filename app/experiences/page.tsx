@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import JsonLd from "../components/JsonLd";
 import PageHero from "../components/PageHero";
+import { buildBreadcrumbList, createPageMetadata } from "../lib/seo";
 
 type Experience = {
   name: string;
@@ -20,38 +22,47 @@ const categories: ExperienceCategory[] = [
   {
     title: "Snorkeling & Marine Life",
     items: [
-      { name: "Turtle Snorkeling", description: "Guided snorkeling arranged for guests who want to explore Thoddoo’s reef areas.", image: "/images/lagoon.webp" },
-      { name: "Manta Snorkeling", description: "A sought-after marine experience arranged around local sea conditions and seasonal movement.", image: "/images/sandbank.webp" },
-      { name: "Reef Snorkeling", description: "A flexible reef outing for guests who want a relaxed session in clear island waters.", image: "/images/lagoon.webp" },
-      { name: "Whale Shark Trip", description: "A full marine day coordinated on request with confirmed routing before departure.", image: "/images/island.webp" },
-      { name: "Shark Feeding", description: "A marine-life focused boat experience planned with operational and weather checks.", image: "/images/lagoon.webp" },
+      // TODO: Replace with original/CC-verified photo featuring an actual sea turtle snorkeling encounter.
+      { name: "Turtle Snorkeling", description: "Guided snorkeling arranged for guests who want to explore Thoddoo’s reef areas.", image: "/images/experience-turtle-snorkeling.webp" },
+      // TODO: Replace with original/CC-verified manta encounter photo from a real snorkeling trip.
+      { name: "Manta Snorkeling", description: "A sought-after marine experience arranged around local sea conditions and seasonal movement.", image: "/images/experience-manta-snorkeling.webp" },
+      { name: "Reef Snorkeling", description: "A flexible reef outing for guests who want a relaxed session in clear island waters.", image: "/images/experience-reef-snorkeling.webp" },
+      // TODO: Replace with original/CC-verified whale shark excursion photo.
+      { name: "Whale Shark Trip", description: "A full marine day coordinated on request with confirmed routing before departure.", image: "/images/experience-whale-shark-trip.webp" },
+      // TODO: Replace with original/CC-verified shark-focused excursion photo.
+      { name: "Shark Feeding", description: "A marine-life focused boat experience planned with operational and weather checks.", image: "/images/experience-shark-feeding.webp" },
     ],
   },
   {
     title: "Island Adventures",
     items: [
-      { name: "Half Day Trip", description: "A compact sea-and-island itinerary arranged for guests who want a shorter outing.", image: "/images/sandbank.webp" },
-      { name: "Full Day Trip", description: "A longer day at sea arranged around guest preferences and available activities.", image: "/images/island.webp" },
-      { name: "Island Hopping", description: "Visit nearby islands with routing coordinated around the day’s sea conditions.", image: "/images/island.webp" },
-      { name: "Sandbank Trip", description: "Time on a sandbank with optional add-ons coordinated by our team on request.", image: "/images/sandbank.webp" },
-      { name: "Resort Trip", description: "A day-visit style experience arranged with participating resorts and transfer timings.", image: "/images/courtyard.webp" },
+      { name: "Half Day Trip", description: "A compact sea-and-island itinerary arranged for guests who want a shorter outing.", image: "/images/experience-half-day-trip.webp" },
+      { name: "Full Day Trip", description: "A longer day at sea arranged around guest preferences and available activities.", image: "/images/experience-full-day-trip.webp" },
+      { name: "Island Hopping", description: "Visit nearby islands with routing coordinated around the day’s sea conditions.", image: "/images/experience-island-hopping.webp" },
+      { name: "Sandbank Trip", description: "Time on a sandbank with optional add-ons coordinated by our team on request.", image: "/images/experience-sandbank-trip.webp" },
+      // TODO: Replace with original/CC-verified resort-island day-trip photo.
+      { name: "Resort Trip", description: "A day-visit style experience arranged with participating resorts and transfer timings.", image: "/images/experience-resort-trip.webp" },
     ],
   },
   {
     title: "Fishing & Local Experiences",
     items: [
-      { name: "Sunset Fishing", description: "An evening fishing outing with island atmosphere and sunset views.", image: "/images/island.webp" },
-      { name: "Octopus Hunting", description: "A local-style sea experience arranged with guidance from trusted operators.", image: "/images/lagoon.webp" },
+      { name: "Sunset Fishing", description: "An evening fishing outing with island atmosphere and sunset views.", image: "/images/experience-sunset-fishing.webp" },
+      // TODO: Replace with original/CC-verified octopus-focused reef activity photo.
+      { name: "Octopus Hunting", description: "A local-style sea experience arranged with guidance from trusted operators.", image: "/images/experience-octopus-hunting.webp" },
     ],
   },
   {
     title: "Special Moments",
     items: [
-      { name: "Dolphin Cruise", description: "A scenic cruise arranged for guests who want a relaxed ocean evening.", image: "/images/lagoon.webp" },
-      { name: "Beach Candle Lit Dinner", description: "A private beach dining setup coordinated for special evenings.", image: "/images/dining.webp" },
-      { name: "Drone Photo Shoot", description: "A photo-focused experience arranged for couples, families, and celebration trips.", image: "/images/entrance.webp" },
-      { name: "Romantic Floating Dinner", description: "A curated dining concept planned directly with guest preferences.", image: "/images/dining.webp" },
-      { name: "Fun Ride", description: "A light, sea-based activity arranged for guests who want a playful session on the water.", image: "/images/sandbank.webp" },
+      // TODO: Replace with original/CC-verified dolphin cruise photo.
+      { name: "Dolphin Cruise", description: "A scenic cruise arranged for guests who want a relaxed ocean evening.", image: "/images/experience-dolphin-cruise.webp" },
+      // TODO: Replace with original beach candle-lit dining setup photo.
+      { name: "Beach Candle Lit Dinner", description: "A private beach dining setup coordinated for special evenings.", image: "/images/experience-beach-candle-lit-dinner.webp" },
+      { name: "Drone Photo Shoot", description: "A photo-focused experience arranged for couples, families, and celebration trips.", image: "/images/experience-drone-photo-shoot.webp" },
+      // TODO: Replace with original floating dinner setup photo.
+      { name: "Romantic Floating Dinner", description: "A curated dining concept planned directly with guest preferences.", image: "/images/experience-romantic-floating-dinner.webp" },
+      { name: "Fun Ride", description: "A light, sea-based activity arranged for guests who want a playful session on the water.", image: "/images/experience-fun-ride.webp" },
     ],
   },
 ];
@@ -78,10 +89,11 @@ function emailUrl(experienceName: string) {
   return `mailto:${teamEmail}?subject=${encodeURIComponent(`Experience enquiry: ${experienceName}`)}&body=${encodeURIComponent(enquiryMessage(experienceName))}`;
 }
 
-export const metadata: Metadata = {
-  title: "Thoddoo Island Experiences",
+export const metadata: Metadata = createPageMetadata({
+  title: "Thoddoo Excursions & Island Experiences",
   description:
-    "Discover snorkeling in Thoddoo, manta snorkeling, sandbank trips, fishing trips, and curated Maldives island experiences arranged for Thoddoo Sun Sky Inn guests.",
+    "Discover snorkeling in Thoddoo, manta and reef outings, sandbank trips, fishing, and curated Maldives island experiences arranged for Thoddoo Sun Sky Inn guests.",
+  path: "/experiences",
   keywords: [
     "Thoddoo excursions",
     "snorkeling in Thoddoo",
@@ -90,12 +102,16 @@ export const metadata: Metadata = {
     "sandbank trips Thoddoo",
     "Thoddoo fishing trips",
   ],
-  alternates: { canonical: "/experiences" },
-};
+});
+
+const breadcrumbData = buildBreadcrumbList([
+  { name: "Experiences", path: "/experiences" },
+]);
 
 export default function Experiences() {
   return (
     <>
+      <JsonLd data={breadcrumbData} />
       <PageHero
         title="Discover Thoddoo beyond the shore"
         kicker="ISLAND EXPERIENCES"

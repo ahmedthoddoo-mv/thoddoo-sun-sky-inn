@@ -39,3 +39,20 @@ img{height:auto}
 @media(max-width:1060px){.experiences-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:900px){.card-grid.three{grid-template-columns:1fr 1fr}.experiences-grid{grid-template-columns:1fr}.image-card img,.experience-card img{aspect-ratio:16/10}.partner-hero-content{padding-top:120px}}
 @media(max-width:560px){.card-grid.three{grid-template-columns:1fr}.thumb-row{grid-template-columns:1fr 1fr}.thumb-row img{aspect-ratio:1/1}}
+
+body{line-height:1.6;overflow-x:hidden}
+.hero-copy,.page-hero .shell{max-width:1160px}
+.hero-copy h1{max-width:900px}
+p{max-width:72ch}
+.image-card,.experience-card,.package-card,.info-card,.contact-card{display:flex;flex-direction:column}
+.image-card div,.experience-card div,.info-card,.contact-card{height:100%}
+.package-card .btn{margin-top:auto}
+.compact-actions{gap:10px;margin-top:18px}
+.compact-actions .btn{min-height:48px}
+footer h4{margin:0 0 14px;color:#fff;font:600 22px 'Playfair Display'}
+.footer-grid a{color:#e8eff1}
+.footer-grid a:hover{color:#fff}
+a:focus-visible,button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.desktop-nav a[aria-current="page"],.mobile-menu a[aria-current="page"]{color:#ead39b}
+@media(hover:hover) and (pointer:fine){.image-card:hover,.experience-card:hover,.package-card:hover,.info-card:hover,.contact-card:hover{transform:translateY(-4px);box-shadow:0 26px 58px rgba(18,43,55,.14)}}
+@media(max-width:900px){.page-hero{padding:155px 0 65px}.footer-grid{gap:34px}.compact-actions .btn{width:100%}}

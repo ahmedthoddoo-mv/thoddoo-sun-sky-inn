@@ -42,9 +42,9 @@ test("homepage renders the Sun Sky Inn brand", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
   const html = await response.text();
-  assert.match(html, /<title>Thoddoo Sun Sky Inn \| Boutique Hotel in Thoddoo, Maldives<\/title>/i);
+  assert.match(html, /<title>Thoddoo Sun Sky Inn \| Guesthouse on Thoddoo Island, Maldives<\/title>/i);
   assert.match(html, /Thoddoo Sun Sky Inn/);
-  assert.match(html, /Wake up to island life\./);
+  assert.match(html, /Thoddoo Sun Sky Inn on Thoddoo Island, Maldives/);
 });
 
 test("all public routes render successfully", async (t) => {
@@ -160,5 +160,23 @@ test("private partner page remains excluded from the sitemap", async () => {
   assert.equal(response.status, 200);
   const sitemap = await response.text();
   assert.doesNotMatch(sitemap, /bez-cestovky/);
-  assert.match(sitemap, /https:\/\/thoddoosunskyinn\.com\/partner/);
+  assert.doesNotMatch(sitemap, /https:\/\/thoddoosunskyinn\.com\/partner/);
+  assert.match(sitemap, /https:\/\/thoddoosunskyinn\.com\/experiences/);
+  assert.match(sitemap, /https:\/\/thoddoosunskyinn\.com\/contact/);
+});
+
+test("partner access page is noindex,follow", async () => {
+  const response = await render("/partner");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /<meta name="robots" content="noindex, follow"\/>/i);
+});
+
+test("robots.txt keeps public crawling open with sitemap reference", async () => {
+  const response = await render("/robots.txt");
+  assert.equal(response.status, 200);
+  const robots = await response.text();
+  assert.match(robots, /User-Agent:\s*\*/i);
+  assert.match(robots, /Allow:\s*\//i);
+  assert.match(robots, /Sitemap:\s*https:\/\/thoddoosunskyinn\.com\/sitemap\.xml/i);
 });

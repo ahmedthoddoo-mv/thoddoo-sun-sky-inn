@@ -8,7 +8,6 @@ const routes = [
   "/packages",
   "/gallery",
   "/discover",
-  "/partner",
   "/contact",
 ];
 

@@ -11,7 +11,7 @@ const desktopLinks = [
 ];
 
 const mobileLinks = [
-  ["Home", "/"], ...desktopLinks, ["Partner", "/partner"]
+  ["Home", "/"], ...desktopLinks
 ];
 
 export default function Header() {
@@ -71,11 +71,12 @@ export default function Header() {
   }, [menuOpen]);
 
   const closeMenu = () => setMenuOpen(false);
+  const isCurrent = (href: string) => pathname === href;
 
   return <header className="site-header">
     <div className="shell nav-wrap">
       <Link href="/" className="brand" onClick={closeMenu}><img src="/images/logo.png" alt="Thoddoo Sun Sky Inn" width={135} height={135} loading="eager" decoding="async" /></Link>
-      <nav className="desktop-nav" aria-label="Primary navigation">{desktopLinks.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
+      <nav className="desktop-nav" aria-label="Primary navigation">{desktopLinks.map(([label, href]) => <Link key={href} href={href} aria-current={isCurrent(href) ? "page" : undefined}>{label}</Link>)}</nav>
       {!hidePublicBooking && <a className="btn btn-gold nav-book desktop-book" href={bookingTransitionPath}>Book direct</a>}
       <button
         ref={toggleRef}
@@ -92,7 +93,7 @@ export default function Header() {
     <div className={`mobile-menu-backdrop ${menuOpen ? "is-open" : ""}`} aria-hidden={!menuOpen}>
       <nav ref={menuRef} id="mobile-navigation" className="mobile-menu" aria-label="Mobile navigation">
         <span className="eyebrow light">Explore Sun Sky Inn</span>
-        {mobileLinks.map(([label, href], index) => <Link ref={index === 0 ? firstLinkRef : undefined} key={href} href={href} onClick={closeMenu}>{label}</Link>)}
+        {mobileLinks.map(([label, href], index) => <Link ref={index === 0 ? firstLinkRef : undefined} key={href} href={href} onClick={closeMenu} aria-current={isCurrent(href) ? "page" : undefined}>{label}</Link>)}
         {!hidePublicBooking && <a className="btn btn-gold mobile-book" href={bookingTransitionPath} onClick={closeMenu}>Book Direct</a>}
       </nav>
     </div>
