@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { officialBookingEngineUrl } from "../app/lib/booking.ts";
 import { getPartnerDestination, partnerCodeError } from "../app/partner/partner-code.ts";
 
 const publicRoutes = [
   "/",
+  "/booking",
   "/stay",
   "/experiences",
   "/packages",
@@ -54,6 +56,26 @@ test("all public routes render successfully", async (t) => {
       assert.match(await response.text(), /Thoddoo Sun Sky Inn/);
     });
   }
+});
+
+test("booking transition page points to the official AIOSELL booking engine", async () => {
+  const response = await render("/booking");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+
+  const html = await response.text();
+
+  assert.match(
+    html,
+    new RegExp(`window\\.setTimeout\\(function\\(\\)\\{window\\.location\\.replace\\(${JSON.stringify(officialBookingEngineUrl).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\);\\},2000\\);`, "i"),
+  );
+  assert.match(
+    html,
+    new RegExp(`href="${officialBookingEngineUrl.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`, "i"),
+  );
+  assert.match(html, /Continue to Secure Booking/);
+  assert.doesNotMatch(html, /https:\/\/be\.aiosell\.com\/book\/22ffd2f355/);
+  assert.doesNotMatch(html, /https:\/\/book\.thoddoosunskyinn\.com/);
 });
 
 test("valid partner code redirects to the private offer", () => {
