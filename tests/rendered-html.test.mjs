@@ -58,6 +58,41 @@ test("all public routes render successfully", async (t) => {
   }
 });
 
+test("experiences catalogue renders core activities and official enquiry channels", async () => {
+  const response = await render("/experiences");
+  assert.equal(response.status, 200);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+
+  const html = await response.text();
+
+  for (const name of [
+    "Turtle Snorkeling",
+    "Manta Snorkeling",
+    "Reef Snorkeling",
+    "Whale Shark Trip",
+    "Shark Feeding",
+    "Half Day Trip",
+    "Full Day Trip",
+    "Island Hopping",
+    "Sandbank Trip",
+    "Resort Trip",
+    "Sunset Fishing",
+    "Octopus Hunting",
+    "Dolphin Cruise",
+    "Beach Candle Lit Dinner",
+    "Drone Photo Shoot",
+    "Romantic Floating Dinner",
+    "Fun Ride",
+  ]) {
+    assert.match(html, new RegExp(name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+
+  assert.match(html, /https:\/\/wa\.me\/9609910136/);
+  assert.match(html, /Ask our team/);
+  assert.match(html, /Price on request/);
+  assert.doesNotMatch(html, /Thoddoo Marine Excursion/i);
+});
+
 test("booking transition page points to the official AIOSELL booking engine", async () => {
   const response = await render("/booking");
   assert.equal(response.status, 200);
